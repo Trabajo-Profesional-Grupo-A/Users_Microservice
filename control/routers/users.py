@@ -1,6 +1,8 @@
 """
 This module contains the API endpoints for the users service.
 """
+import firebase_admin
+import os
 
 from fastapi import (
     APIRouter,
@@ -13,6 +15,10 @@ from control.codes import (
     BAD_REQUEST,
     CONFLICT,
 )
+from firebase_admin import credentials, storage
+
+cred = credentials.Certificate("firebase_credentials.json")
+firebase_admin.initialize_app(cred, {"storageBucket": "tpp-grupoa.appspot.com"})
 
 from control.models.models import UserSignUp, UserSignIn, UserResponse
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
@@ -68,4 +74,23 @@ def get_user_by_token(token: str):
         return UserSignUp.parse_obj(user)
 
     except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+    
+@router.post("/upload-image")
+def upload_image():
+    """
+    Upload an image.
+    """
+    try:
+        script_dir = os.path.dirname(__file__)
+        image_path = os.path.join(script_dir, "../../image.png")
+        
+        if not os.path.exists(image_path):
+            raise FileNotFoundError(f"No such file or directory: '{image_path}'")
+        
+        bucket = storage.bucket() 
+        blob = bucket.blob("image.png")
+        blob.upload_from_filename(image_path)
+        return {"message": "Image uploaded successfully."}
+    except Exception as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
