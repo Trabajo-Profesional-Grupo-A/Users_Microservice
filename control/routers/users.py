@@ -95,3 +95,4 @@ def upload_image():
     except Exception as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
+    
