@@ -1,8 +1,6 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from control.routers import users
-from annoy import AnnoyIndex
-from scipy.spatial.distance import cosine
 
 app = FastAPI(
     title="Users API", description="This is the API for the users service."
