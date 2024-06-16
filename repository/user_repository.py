@@ -2,14 +2,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo import errors
 from control.models.models import UserSignUp
-DB_URI = "mongodb+srv://nencinoza:4VxMOntx1i2W8uQm@users.6jjtd5n.mongodb.net/?retryWrites=true&w=majority&appName=users"
-
-client = MongoClient(DB_URI, server_api=ServerApi('1'))
-
-db = client.users
-collection = db.users
-collection.create_index([('email', 1)], unique=True)
-
+from repository.setup_mongodb import db, collection
 
 def create_user(user: UserSignUp): 
     """

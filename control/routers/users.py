@@ -61,7 +61,7 @@ def sign_in(user: UserSignIn):
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
-@router.get("/get-user", response_model=UserResponse)
+@router.get("/user", response_model=UserResponse)
 def get_user_by_token(token: str):
     """
     Get a user by token.
@@ -94,3 +94,4 @@ def upload_image():
         return {"message": "Image uploaded successfully."}
     except Exception as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+    
