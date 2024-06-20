@@ -135,11 +135,11 @@ def upload_image(token: str):
         blob = bucket.blob(local_file_path)
         blob.download_to_filename(temp_local_filename)
 
-        # Lee y printea el contenido del archivo descargado
-        with open(temp_local_filename, 'rb') as file:
-            content = file.read()
-            print(f'Contenido del archivo {local_file_path}:')
-            print(content)
+        # con el read PDF2 funciona
+        # with open(temp_local_filename, 'rb') as file:
+        #     content = file.read()
+        #     print(f'Contenido del archivo {local_file_path}:')
+        #     print(content)
 
         return {"message": "Document uploaded successfully."}
     except Exception as e:
