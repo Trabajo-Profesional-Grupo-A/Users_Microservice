@@ -76,6 +76,21 @@ def get_user_by_token(token: str):
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
+@router.get("/user/email", response_model=UserResponse)
+def get_user_by_email(email: str):
+    """
+    Get a user by email.
+    """
+    try:
+        user = get_user(email)
+        if not user:
+            raise HTTPException(status_code=USER_NOT_FOUND, detail="User not found.")
+        return UserSignUp.parse_obj(user)
+
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+
+# prueba, esto se hace desde el front
 @router.post("/upload-image")
 def upload_image():
     """
@@ -94,5 +109,39 @@ def upload_image():
         return {"message": "Image uploaded successfully."}
     except Exception as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
-    
+
+# prueba, esto se hace desde el front
+# desde el front se sube el pdf a firebase storage
+# este endpoint va a hacer el procesamiento del lenguaje natural
+# para extraer la información del cv y va a retornar un json con 
+# los campos del autocompletado
+@router.post("/resume")
+def upload_image(token: str):
+    """
+    Upload an image.
+    """
+    try:
+        email = decode_token(token)["email"]
+        user = get_user(email)
+        # script_dir = os.path.dirname(__file__)
+
+        # documento_path = os.path.join(script_dir, "../../Akshay_Srimatrix.pdf")
+        bucket = storage.bucket()
+        local_file_path = f"resumes/cv_{email}.pdf"
+        # blob = bucket.blob(local_file_path)
+        # blob.upload_from_filename(documento_path)
+
+        temp_local_filename = "./temp.pdf"
+        blob = bucket.blob(local_file_path)
+        blob.download_to_filename(temp_local_filename)
+
+        # Lee y printea el contenido del archivo descargado
+        with open(temp_local_filename, 'rb') as file:
+            content = file.read()
+            print(f'Contenido del archivo {local_file_path}:')
+            print(content)
+
+        return {"message": "Document uploaded successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
