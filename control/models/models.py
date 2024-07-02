@@ -13,8 +13,6 @@ class UserSignUp(BaseModel):
     password: str
     first_name: str
     last_name: str
-    phone_number: str
-    address: str
 
 class UserSignIn(BaseModel):
     """
@@ -30,5 +28,3 @@ class UserResponse(BaseModel):
     email: str
     first_name: str
     last_name: str
-    phone_number: str
-    address: str
