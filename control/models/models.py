@@ -2,6 +2,7 @@
 """
 This module is dedicated for all the pydantic models the API will use.
 """
+from typing import List
 from pydantic import BaseModel
 
 
@@ -28,3 +29,11 @@ class UserResponse(BaseModel):
     email: str
     first_name: str
     last_name: str
+
+class ResumeFields(BaseModel):
+    education: str
+    experience: str
+    job_titles: List[str]
+    phone: str
+    skills: List[str]
+    clean_data: str
