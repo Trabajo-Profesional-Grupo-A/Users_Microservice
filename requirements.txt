@@ -16,3 +16,4 @@ torchvision
 torchaudio
 textacy
 pandas
+nltk
