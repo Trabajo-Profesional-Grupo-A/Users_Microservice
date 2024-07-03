@@ -10,34 +10,34 @@ from transformers import BartTokenizer, BartForConditionalGeneration
 
 
 
-# Load the English model
-nlp = spacy.load("en_core_web_sm")
-matcher = spacy.matcher.Matcher(nlp.vocab)
-designitionmatcher = spacy.matcher.PhraseMatcher(nlp.vocab)
-
-# Load the tokenizer and model
-tokenizer = BartTokenizer.from_pretrained('ilsilfverskiold/tech-keywords-extractor')
-model = BartForConditionalGeneration.from_pretrained('ilsilfverskiold/tech-keywords-extractor')
-
-
-
 class DataExtractor:
     """
     A class for extracting various types of data from text.
     """
 
-    def __init__(self, raw_text: str):
+    def __init__(self, raw_text: str, nlp_sm, nlp_md, path_skills, path_universities, path_titles):
         """
         Initialize the DataExtractor object.
 
         Args:
             raw_text (str): The raw input text.
         """
+        self.path_skills = path_skills
+        self.path_universities = path_universities
+        self.path_titles = path_titles
+
+        self.nlp = nlp_sm
+        self.matcher = spacy.matcher.Matcher(self.nlp.vocab)
+        self.designitionmatcher = spacy.matcher.PhraseMatcher(self.nlp.vocab)
+
+        # Load the tokenizer and model
+        self.tokenizer = BartTokenizer.from_pretrained('ilsilfverskiold/tech-keywords-extractor')
+        self.model = BartForConditionalGeneration.from_pretrained('ilsilfverskiold/tech-keywords-extractor')
 
         self.text = raw_text
         self.clean_text = TextCleaner(self.text).clean_text()
-        self.doc = nlp(self.text)
-        self.doc_clean = nlp(self.clean_text)
+        self.doc = self.nlp(self.text)
+        self.doc_clean = self.nlp(self.clean_text)
 
     def extract_links(self):
         """
@@ -100,8 +100,8 @@ class DataExtractor:
         # First name and Last name are always Proper Nouns
         pattern = [{'POS': 'PROPN'}, {'POS': 'PROPN'}]
         
-        matcher.add('NAME', [pattern])
-        matches = matcher(self.doc)
+        self.matcher.add('NAME', [pattern])
+        matches = self.matcher(self.doc)
         
         # Extract names using Matcher
         matcher_names = [self.doc[start:end].text for match_id, start, end in matches]
@@ -128,14 +128,14 @@ class DataExtractor:
             list: A list containing all the extracted email addresses.
         """
         # First method using spaCy matcher
-        matcher = spacy.matcher.Matcher(nlp.vocab)
+        matcher = spacy.matcher.Matcher(self.nlp.vocab)
         email_pattern = [{'LIKE_EMAIL': True}]
         matcher.add('EMAIL', [email_pattern])
         
         matches = matcher(self.doc)
         spacy_emails = set()  # Use a set to store unique emails from spaCy
         for match_id, start, end in matches:
-            if match_id == nlp.vocab.strings['EMAIL']:
+            if match_id == self.nlp.vocab.strings['EMAIL']:
                 spacy_emails.add(self.doc[start:end].text)
 
         # Second method using regular expression
@@ -325,8 +325,7 @@ class DataExtractor:
                 universities_spacy.add(entity.text)
 
         # Method 2: Using a list of known universities from a CSV file
-        file = r'/home/martin/tpp/resume-parsing/Data/world-universities.csv'
-        df = pd.read_csv(file, header=None)
+        df = pd.read_csv(self.path_universities, header=None)
         known_universities = [i.lower() for i in df[1]]
         universities_csv = set()  # Use a set to avoid duplicates
 
@@ -341,13 +340,13 @@ class DataExtractor:
     
     def _extract_skills_from_BERT(self):
         # Tokenize the input text
-        inputs = tokenizer(self.clean_text, return_tensors='pt')
+        inputs = self.tokenizer(self.clean_text, return_tensors='pt')
 
         # Generate keywords
-        outputs = model.generate(**inputs, max_new_tokens=40)
+        outputs = self.model.generate(**inputs, max_new_tokens=40)
 
         # Decode the generated keywords
-        keywords = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        keywords = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
         return keywords.split(", ")
     
@@ -357,7 +356,7 @@ class DataExtractor:
             return set(row[0] for row in reader)
         
     def _csv_skills(self):
-        skills_keywords = self._load_keywords(r'/home/martin/tpp/resume-parsing/Data/newSkills.csv')
+        skills_keywords = self._load_keywords(self.path_skills)
         skills = set()
 
         for keyword in skills_keywords:
@@ -416,15 +415,15 @@ class DataExtractor:
         Returns:
             str: A string containing the extracted designition.
         """
-        file = r'/home/martin/tpp/resume-parsing/Data/titles_combined.txt'
-        with open(file, "r", encoding='utf-8') as f:
+
+        with open(self.path_titles, "r", encoding='utf-8') as f:
             designation = [line.strip().lower() for line in f]
         
-        patterns = [nlp.make_doc(text) for text in designation if len(nlp.make_doc(text)) < 10]
-        designitionmatcher.add("Job title", None, *patterns)
+        patterns = [self.nlp.make_doc(text) for text in designation if len(self.nlp.make_doc(text)) < 10]
+        self.designitionmatcher.add("Job title", None, *patterns)
         
         job_titles = set()
-        matches = designitionmatcher(self.doc_clean)
+        matches = self.designitionmatcher(self.doc_clean)
         
         for match_id, start, end in matches:
             span = self.doc_clean[start:end]

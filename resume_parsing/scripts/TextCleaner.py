@@ -49,15 +49,11 @@ class TextCleaner:
             return wordnet.ADV
         else:
             return wordnet.NOUN
-        
-
-# Load the English model
-nlp = spacy.load("en_core_web_md")
 
 class CountFrequency:
-    def __init__(self, text):
+    def __init__(self, text, nlp_md):
         self.text = text
-        self.doc = nlp(text)
+        self.doc = nlp_md(text)
 
     def count_frequency(self):
         """

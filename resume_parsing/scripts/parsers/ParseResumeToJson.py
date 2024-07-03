@@ -6,21 +6,21 @@ from resume_parsing.scripts.utils.Utils import generate_unique_id
 
 class ParseResume:
 
-    def __init__(self, resume: str):
+    def __init__(self, resume: str, nlp_sm, nlp_md, path_skills, path_universities, path_titles):
         self.resume_data = resume
         self.clean_data = TextCleaner(self.resume_data).clean_text()
-        self.entities = DataExtractor(self.resume_data).extract_entities()
-        self.name = DataExtractor(self.resume_data[:30]).extract_names()
-        self.experience = DataExtractor(self.clean_data).extract_experience()
-        self.education = DataExtractor(self.clean_data).extract_education()
-        self.education_title = DataExtractor(self.resume_data).extract_education_title()
-        self.universities = DataExtractor(self.resume_data).extract_universities()
-        self.skills = DataExtractor(self.resume_data).extract_skills()
-        self.emails = DataExtractor(self.resume_data).extract_emails()
-        self.phones = DataExtractor(self.resume_data).extract_phone_numbers()
-        self.key_words = DataExtractor(self.resume_data).extract_particular_words()
-        self.job_title = DataExtractor(self.clean_data).extract_designition()
-        self.pos_frequencies = CountFrequency(self.clean_data).count_frequency()
+        self.entities = DataExtractor(self.resume_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_entities()
+        self.name = DataExtractor(self.resume_data[:30], nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_names()
+        self.experience = DataExtractor(self.clean_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_experience()
+        self.education = DataExtractor(self.clean_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_education()
+        self.education_title = DataExtractor(self.resume_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_education_title()
+        self.universities = DataExtractor(self.resume_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_universities()
+        self.skills = DataExtractor(self.resume_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_skills()
+        self.emails = DataExtractor(self.resume_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_emails()
+        self.phones = DataExtractor(self.resume_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_phone_numbers()
+        self.key_words = DataExtractor(self.resume_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_particular_words()
+        self.job_title = DataExtractor(self.clean_data, nlp_sm,nlp_md, path_skills, path_universities, path_titles).extract_designition()
+        self.pos_frequencies = CountFrequency(self.clean_data, nlp_md).count_frequency()
         self.keyterms = KeytermExtractor(self.clean_data).get_keyterms_based_on_sgrank()
         self.bi_grams = KeytermExtractor(self.clean_data).bi_gramchunker()
         self.tri_grams = KeytermExtractor(self.clean_data).tri_gramchunker()

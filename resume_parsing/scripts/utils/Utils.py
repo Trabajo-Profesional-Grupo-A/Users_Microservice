@@ -8,12 +8,6 @@ import os
 import os.path
 
 
-# Load the English model
-nlp = spacy.load("en_core_web_md")
-
-
-
-
 def generate_unique_id():
     """
     Generate a unique ID and return it as a string.
