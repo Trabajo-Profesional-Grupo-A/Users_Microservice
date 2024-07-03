@@ -16,11 +16,3 @@ torchvision
 torchaudio
 textacy
 pandas
-numpy
-csv
-os
-string
-json
-nltk
-logging
-typing
