@@ -17,7 +17,6 @@ torchaudio
 textacy
 pandas
 numpy
-re
 csv
 os
 string
