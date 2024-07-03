@@ -15,3 +15,13 @@ torch
 torchvision
 torchaudio
 textacy
+pandas
+numpy
+re
+csv
+os
+string
+json
+nltk
+logging
+typing
