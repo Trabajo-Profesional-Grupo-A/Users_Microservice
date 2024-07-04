@@ -26,14 +26,14 @@ class DataExtractor:
     A class for extracting various types of data from text.
     """
 
-    def __init__(self, raw_text: str):
+    def __init__(self, raw_text: str, resume_dict_OCR = None):
         """
         Initialize the DataExtractor object.
 
         Args:
             raw_text (str): The raw input text.
         """
-
+        self.resume_dict_OCR = resume_dict_OCR
         self.text = raw_text
         self.clean_text = TextCleaner(self.text).clean_text()
         self.doc = nlp(self.text)
@@ -182,22 +182,8 @@ class DataExtractor:
         Returns:
             str: A string containing all the extracted experience.
         """
-        experience_section = []
-        in_experience_section = False
 
-        for token in self.doc_clean:
-            if token.text.lower() in RESUME_SECTIONS:
-                if token.text.lower() == "experience":
-                    in_experience_section = True
-                else:
-                    if in_experience_section:
-                        break  # Stop adding tokens when a new section is encountered
-                    in_experience_section = False
-
-            if in_experience_section:
-                experience_section.append(token.text)
-
-        return " ".join(experience_section)
+        return self.resume_dict_OCR.get("Work Experience")
     
     def extract_education(self):
         """
@@ -209,24 +195,32 @@ class DataExtractor:
         Returns:
             str: A string containing all the extracted education.
         """
-        education_section = []
-        in_education_section = False
 
-        for token in self.doc_clean:
-            if token.text.lower() in RESUME_SECTIONS:
-                if token.text.lower() == "education":
-                    in_education_section = True
-                else:
-                    if in_education_section:
-                        break
-                    in_education_section = False
+        return self.resume_dict_OCR.get("Education")
+    
+    def extract_personal_info(self):
+        """
+        Extract personal information from a given string. It does so by using the Spacy module.
 
-            if in_education_section:
-                education_section.append(token.text)
+        Args:
+            text (str): The string from which to extract personal information.
 
-        education_text = " ".join(education_section)
+        Returns:
+            str: A string containing all the extracted personal information.
+        """
+        return self.resume_dict_OCR.get("Personal Info")
+    
+    def extract_extra_info(self):
+        """
+        Extract extra information from a given string. It does so by using the Spacy module.
 
-        return education_text
+        Args:
+            text (str): The string from which to extract extra information.
+
+        Returns:
+            str: A string containing all the extracted extra information.
+        """
+        return self.resume_dict_OCR.get("Extra")
     
     def extract_education_title(self):
         """
@@ -369,10 +363,13 @@ class DataExtractor:
     def extract_skills(self):
         skills_csv = self._csv_skills()
         skills_BERT = self._extract_skills_from_BERT()
+        skills_OCR_text = self.resume_dict_OCR.get("Skills").lower()
+        skills_OCR = set(skills_OCR_text.split(", "))
          
         combined_skills = skills_csv.union(skills_BERT)  # Combine filtered skills without duplicates
+        all_skills = combined_skills.union(skills_OCR)
         
-        return list(combined_skills)  # Return combined filtered skills as a list
+        return list(all_skills)  # Return combined filtered skills as a list
 
 
     def extract_particular_words(self):

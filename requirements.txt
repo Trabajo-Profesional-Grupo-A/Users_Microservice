@@ -17,3 +17,7 @@ torchaudio
 textacy
 pandas
 nltk
+pdf2image
+easyocr
+pillow
+pytesseract

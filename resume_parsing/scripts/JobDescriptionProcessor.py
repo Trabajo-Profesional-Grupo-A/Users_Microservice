@@ -10,7 +10,6 @@ class JobDescriptionProcessor:
     def process(self) -> bool:
         try:
             jd_dict = self._read_job_desc()
-            #self._write_json_file(jd_dict)
             return jd_dict
         except Exception as e:
             print(f"An error occurred: {str(e)}")

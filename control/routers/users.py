@@ -107,7 +107,7 @@ def get_fields_of_cv(email: str):
         if not blob.exists():
             raise HTTPException(status_code=404, detail="File not found")
         blob.download_to_filename(file_path)
-
+        print("comienozo")
         dict = ResumeProcessor(file_path).process()
 
         return ResumeFields(
