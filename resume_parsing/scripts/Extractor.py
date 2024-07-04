@@ -382,7 +382,27 @@ class DataExtractor:
         Returns:
             str: A string containing all the extracted model data.
         """
-        return ""
+        pattern_numbers = r"\b\d+\b"
+        cleaned_text = re.sub(pattern_numbers, "", self.text)
+
+        personal_info = self.extract_personal_info()
+        cleaned_personal_text = TextCleaner(personal_info).clean_text()
+
+        job_titles = self.extract_designition()
+
+        for title in job_titles:
+            if title in cleaned_personal_text:
+                cleaned_personal_text = cleaned_personal_text.replace(title, "")
+
+        words_to_remove = set(cleaned_personal_text.split())
+
+        cleaned_text = ' '.join([word for word in self.text.split() if word not in words_to_remove])
+
+        pattern_numbers = r"\b\d+\b"
+        model_text = re.sub(pattern_numbers, "", cleaned_text)
+            
+        return model_text
+
 
 
     def extract_particular_words(self):
