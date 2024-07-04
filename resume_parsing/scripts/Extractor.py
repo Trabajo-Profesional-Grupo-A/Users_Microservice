@@ -370,6 +370,19 @@ class DataExtractor:
         all_skills = combined_skills.union(skills_OCR)
         
         return list(all_skills)  # Return combined filtered skills as a list
+    
+
+    def extract_model_data(self):
+        """
+        Extract model data from a given string. It does so by using the Spacy module.
+
+        Args:
+            text (str): The string from which to extract model data.
+
+        Returns:
+            str: A string containing all the extracted model data.
+        """
+        return ""
 
 
     def extract_particular_words(self):

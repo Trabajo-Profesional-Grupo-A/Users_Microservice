@@ -8,42 +8,25 @@ class ParseResume:
 
     def __init__(self, resume: str, resume_dict_OCR: dict):
         self.resume_data = resume
-        print("1")
         self.clean_data = TextCleaner(self.resume_data).clean_text()
-        print("2")
         self.entities = DataExtractor(self.resume_data).extract_entities()
-        print("1")
         self.name = DataExtractor(self.resume_data[:30]).extract_names()
-        print("1")
         self.experience = DataExtractor("", resume_dict_OCR).extract_experience()
-        print("1")
         self.education = DataExtractor("", resume_dict_OCR).extract_education()
-        print("1")
         self.education_title = DataExtractor(self.resume_data).extract_education_title()
-        print("1")
         self.universities = DataExtractor(self.resume_data).extract_universities()
-        print("1")
         self.skills = DataExtractor(self.resume_data, resume_dict_OCR).extract_skills()
-        print("1")
         self.emails = DataExtractor(self.resume_data).extract_emails()
-        print("1")
         self.phones = DataExtractor(self.resume_data).extract_phone_numbers()
-        print("1")
         self.key_words = DataExtractor(self.resume_data).extract_particular_words()
-        print("1")
         self.job_title = DataExtractor(self.clean_data).extract_designition()
-        print("1")
         self.pos_frequencies = CountFrequency(self.clean_data).count_frequency()
-        print("1")
         self.keyterms = KeytermExtractor(self.clean_data).get_keyterms_based_on_sgrank()
-        print("1")
         self.bi_grams = KeytermExtractor(self.clean_data).bi_gramchunker()
-        print("1")
         self.tri_grams = KeytermExtractor(self.clean_data).tri_gramchunker()
-        print("1")
         self.personal_info = DataExtractor("",resume_dict_OCR).extract_personal_info()
-        print("1")
         self.extra = DataExtractor("",resume_dict_OCR).extract_extra_info()
+        self.model_data = DataExtractor(self.clean_data).extract_model_data()
 
     def get_JSON(self) -> dict:
         """
@@ -69,7 +52,8 @@ class ParseResume:
             "tri_grams": str(self.tri_grams),
             "pos_frequencies": self.pos_frequencies,
             "personal_info": self.personal_info,
-            "extra": self.extra
+            "extra": self.extra,
+            "model_data": self.model_data
         }
 
         return resume_dictionary

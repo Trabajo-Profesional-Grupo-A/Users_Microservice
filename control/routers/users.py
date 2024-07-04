@@ -114,9 +114,8 @@ def get_fields_of_cv(email: str):
             education=dict["education"],
             experience=dict["experience"],
             job_titles=dict["job_title"],
-            phone=dict["phones"],
             skills=dict["skills"],
-            clean_data=dict["clean_data"]
+            model_data=dict["model_data"]
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

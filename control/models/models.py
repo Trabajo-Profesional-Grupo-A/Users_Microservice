@@ -31,9 +31,11 @@ class UserResponse(BaseModel):
     last_name: str
 
 class ResumeFields(BaseModel):
+    """
+    Resume fields model.
+    """
     education: str
     experience: str
     job_titles: List[str]
-    phone: str
     skills: List[str]
-    clean_data: str
+    model_data: str

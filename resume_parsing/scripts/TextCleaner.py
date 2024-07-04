@@ -27,7 +27,8 @@ class TextCleaner:
 
     def clean_text(self) -> str:
         text_to_lower = self.raw_input_text.lower()
-        text_without_special_characters = re.sub(r"[^a-z0-9]", " ", text_to_lower)
+        pattern = r"\.js|\W+"
+        text_without_special_characters = re.sub(pattern, lambda x: x.group(0) if x.group(0) == ".js" else " ", text_to_lower)
         text_without_extra_spaces = " ".join(text_without_special_characters.split())
         tokens = word_tokenize(text_without_extra_spaces)
         pos_tags = pos_tag(tokens)

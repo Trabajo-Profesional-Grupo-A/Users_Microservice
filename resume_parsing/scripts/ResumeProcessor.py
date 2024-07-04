@@ -1,5 +1,5 @@
 from resume_parsing.OCRParsing import OCRParsing
-from .parsers import ParseJobDesc, ParseResume
+from .parsers import ParseResume
 from .ReadPdf import read_single_pdf
 
 
@@ -28,18 +28,14 @@ class ResumeProcessor:
     def _read_resumes_OCR(self, file_name) -> dict:
             # Create an instance of the OCRParsing class
             ocr_parser = OCRParsing()
-            print("a")
             # Convert PDF to images
             images = ocr_parser.convertPdfToImage(file_name)
-            print("a")
             # Apply OCR to images
             bounds = ocr_parser.applyOCR(images)
-            print("a")
             # Create bounding boxes for relevant categories
             box = ocr_parser.createBoxes(bounds)
-            print("a")
+
             columns = ocr_parser.checkColumns(box)
-            print("a")
             # Create new bounds based on column or normal layout
             if columns:
                 new_bounds = ocr_parser.createColumnBounds(box)
@@ -47,14 +43,10 @@ class ResumeProcessor:
                 new_bounds = ocr_parser.createNormalBounds(box)
 
             new_bounds = list(map(lambda x: ([x[0][3], x[0][2], x[0][1], x[0][0]], x[1]) if x[0][3] != [0, 0] else x, new_bounds))
-            print("a")
             # Assign proper names to the bounding boxes
             proper_names = ocr_parser.giveProperNames(new_bounds)
-            print("a")
             # Draw bounding boxes on images
             ocr_parser.drawBoxes(images[0], proper_names)
-            print("a")
             # Extract text from images
             extracted_text = ocr_parser.extractText(images[0], proper_names)
-            print("extracted text", extracted_text)
             return extracted_text 
