@@ -15,7 +15,6 @@ class KeytermExtractor:
             raw_text (str): The raw input text.
             top_n_values (int): The number of top keyterms to extract.
         """
-
         self.raw_text = raw_text
         self.text_doc = textacy.make_spacy_doc(self.raw_text, lang="en_core_web_md")
         self.top_n_values = top_n_values

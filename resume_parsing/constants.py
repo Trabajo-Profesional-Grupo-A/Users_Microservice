@@ -1,3 +1,9 @@
+PROCESSED_RESUMES_PATH = r"/home/martin/tpp/resume-parsing/Data/Processed/Resumes"
+PROCESSED_JOB_DESCRIPTIONS_PATH = r"/home/martin/tpp/resume-parsing/Data/Processed/JobDescription"
+
+RESUMES_PATH = r"/home/martin/tpp/resume-parsing/Data/Resumes"
+JD_PATH = r"/home/martin/tpp/resume-parsing/Data/JobDescription"
+
 REGEX_PATTERNS = {
     "email_pattern": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b",
     "phone_pattern": r"\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}",

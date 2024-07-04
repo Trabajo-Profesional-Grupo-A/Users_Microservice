@@ -10,8 +10,6 @@ from fastapi import (
     APIRouter,
     HTTPException,
 )
-import spacy
-import textacy
 
 from resume_parsing.scripts.ResumeProcessor import ResumeProcessor
 
@@ -39,15 +37,6 @@ router = APIRouter(
 origins = ["*"]
 
 from repository.user_repository import create_user, get_user
-
-nlp_md = None
-nlp_sm = None
-
-@router.on_event("startup")
-async def load_models():
-    global nlp_md, nlp_sm
-    nlp_md = spacy.load("en_core_web_md")
-    nlp_sm = spacy.load("en_core_web_sm")
 
 @router.post("/sign-up")
 def sign_up(user: UserSignUp):
@@ -112,10 +101,6 @@ def get_user_by_email(email: str):
 def get_fields_of_cv(email: str):
     file_name = f"{email}.pdf"
     file_path = f"/tmp/{file_name}"
-    path_skills = "resume_parsing/Data/newSkills.csv"
-    path_universities = "resume_parsing/Data/world-universities.csv"
-    path_titles = "resume_parsing/Data/titles_combined.txt"
-
 
     try:
         blob = bucket.blob(file_name)
@@ -123,9 +108,7 @@ def get_fields_of_cv(email: str):
             raise HTTPException(status_code=404, detail="File not found")
         blob.download_to_filename(file_path)
 
-        dict = ResumeProcessor(file_path, nlp_sm, nlp_md, path_skills, path_universities, path_titles).process()
-
-        print("return del resume procesor", dict)
+        dict = ResumeProcessor(file_path).process()
 
         return ResumeFields(
             education=dict["education"],
