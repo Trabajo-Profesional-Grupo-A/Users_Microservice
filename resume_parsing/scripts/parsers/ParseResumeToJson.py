@@ -26,7 +26,7 @@ class ParseResume:
         self.tri_grams = KeytermExtractor(self.clean_data).tri_gramchunker()
         self.personal_info = DataExtractor("",resume_dict_OCR).extract_personal_info()
         self.extra = DataExtractor("",resume_dict_OCR).extract_extra_info()
-        self.model_data = DataExtractor(self.clean_data).extract_model_data()
+        self.model_data = DataExtractor(self.clean_data, resume_dict_OCR).extract_model_data()
 
     def get_JSON(self) -> dict:
         """
