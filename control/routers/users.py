@@ -34,7 +34,7 @@ def sign_up(user: UserSignUp):
     try: 
         user.password = hash_password(user.password)
         create_user(user)
-        token = generate_token(user.email)
+        token = generate_token(user.email, "candidate")
         return {"message": "User created successfully.", "token": token}
     except ValueError as e:
         raise HTTPException(status_code=CONFLICT, detail=str(e))
@@ -49,7 +49,7 @@ def sign_in(user: UserSignIn):
         if not stored_user:
             raise HTTPException(status_code=USER_NOT_FOUND, detail="User not found.")
         if check_password(user.password, stored_user["password"]):
-            token = generate_token(user.email)
+            token = generate_token(user.email, "candidate")
             return {"message": "User signed in successfully.", "token": token}
         else: 
             raise HTTPException(status_code=INCORRECT_CREDENTIALS, detail="Incorrect email or password.")

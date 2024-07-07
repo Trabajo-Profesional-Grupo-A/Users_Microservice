@@ -29,3 +29,12 @@ class UserResponse(BaseModel):
     email: str
     first_name: str
     last_name: str
+    user_type: str = "candidate"
+
+class ResumeFields(BaseModel):
+    education: str
+    experience: str
+    job_titles: List[str]
+    phone: str
+    skills: List[str]
+    clean_data: str
