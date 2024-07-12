@@ -13,3 +13,6 @@ client = MongoClient(db_url, server_api=ServerApi('1'), tlsCAFile=certifi.where(
 db = client['users']
 collection = db['users']
 collection.create_index([('email', 1)], unique=True)
+
+resume_collections = db['resumes']
+resume_collections.create_index([('email', 1)], unique=True)
