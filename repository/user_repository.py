@@ -29,6 +29,8 @@ def upload_user_resume(email:str, resume: UserResume):
     Update a user's resume.
     """
     try:
-        resume_collections.insert_one({"email": email}, {"$set": dict(resume)})
+        resume_dict = dict(resume)
+        resume_dict["email"] = email
+        resume_collections.insert_one(resume_dict)
     except Exception as e:
         raise ValueError(str(e))
