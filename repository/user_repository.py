@@ -1,8 +1,8 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo import errors
-from control.models.models import UserSignUp
-from repository.setup_mongodb import db, collection
+from control.models.models import UserResume, UserSignUp
+from repository.setup_mongodb import db, collection, resume_collections
 
 def create_user(user: UserSignUp): 
     """
@@ -21,5 +21,14 @@ def get_user(email: str):
     """
     try:
         return collection.find_one({"email": email})
+    except Exception as e:
+        raise ValueError(str(e))
+    
+def upload_user_resume(email:str, resume: UserResume):
+    """
+    Update a user's resume.
+    """
+    try:
+        resume_collections.insert_one({"email": email}, {"$set": dict(resume)})
     except Exception as e:
         raise ValueError(str(e))

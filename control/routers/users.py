@@ -14,7 +14,7 @@ from control.codes import (
     CONFLICT,
 )
 
-from control.models.models import UserSignUp, UserSignIn, UserResponse
+from control.models.models import UserResume, UserSignUp, UserSignIn, UserResponse
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
 
 router = APIRouter(
@@ -24,7 +24,7 @@ router = APIRouter(
 
 origins = ["*"]
 
-from repository.user_repository import create_user, get_user
+from repository.user_repository import create_user, get_user, upload_user_resume
 
 @router.post("/sign-up")
 def sign_up(user: UserSignUp):
@@ -81,6 +81,23 @@ def get_user_by_email(email: str):
         if not user:
             raise HTTPException(status_code=USER_NOT_FOUND, detail="User not found.")
         return UserSignUp.parse_obj(user)
+
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+
+@router.post("/user/upload_resume")
+def upload_resume(token: str, resume: UserResume):
+    """
+    Upload a resume for a user.
+    """
+    try:
+        email = decode_token(token)["email"]
+        user = get_user(email)
+        if not user:
+            raise HTTPException(status_code=USER_NOT_FOUND, detail="User not found.")
+        
+        upload_user_resume(email, resume)
+        return {"message": "Resume uploaded successfully."}
 
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
