@@ -34,3 +34,12 @@ def upload_user_resume(email:str, resume: UserResume):
         resume_collections.insert_one(resume_dict)
     except Exception as e:
         raise ValueError(str(e))
+    
+def get_resume_by_email(email: str):
+    """
+    Get a user's resume by email.
+    """
+    try:
+        return resume_collections.find_one({"email": email})
+    except Exception as e:
+        raise ValueError(str(e))

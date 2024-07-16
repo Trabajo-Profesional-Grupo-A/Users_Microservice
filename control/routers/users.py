@@ -24,7 +24,7 @@ router = APIRouter(
 
 origins = ["*"]
 
-from repository.user_repository import create_user, get_user, upload_user_resume
+from repository.user_repository import create_user, get_resume_by_email, get_user, upload_user_resume
 
 @router.post("/sign-up")
 def sign_up(user: UserSignUp):
@@ -101,4 +101,15 @@ def upload_resume(token: str, resume: UserResume):
 
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
-    
+
+@router.get("/user/resume", response_model=UserResume)
+def get_resume(email: str):
+    """
+    Get a user's resume by token.
+    """
+    try:
+        resume = get_resume_by_email(email)
+        return resume
+
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
