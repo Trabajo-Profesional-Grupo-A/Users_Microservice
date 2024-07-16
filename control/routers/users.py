@@ -109,7 +109,7 @@ def get_resume(email: str):
     """
     try:
         resume = get_resume_by_email(email)
-        return resume
+        return UserResume.parse_obj(resume)
 
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
