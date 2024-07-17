@@ -10,4 +10,3 @@ pip install -r requirements.txt
 ```bash
 uvicorn control.controller:app --port 8000 --reload
 ```
-

@@ -6,6 +6,7 @@ from fastapi import (
     APIRouter,
     HTTPException,
 )
+import requests
 
 from control.codes import (
     USER_NOT_FOUND,
@@ -13,6 +14,8 @@ from control.codes import (
     BAD_REQUEST,
     CONFLICT,
 )
+
+API_MATCHING_URL = "http://34.42.161.58:8000"
 
 from control.models.models import UserResume, UserSignUp, UserSignIn, UserResponse
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
@@ -97,6 +100,17 @@ def upload_resume(token: str, resume: UserResume):
             raise HTTPException(status_code=USER_NOT_FOUND, detail="User not found.")
         
         upload_user_resume(email, resume)
+
+        url = API_MATCHING_URL + f"/matching/candidate/{email}/"
+
+        response = requests.post(
+            url,
+            json={"model_data": resume.model_data}
+        )
+
+        if response.status_code != 200:
+            raise HTTPException(status_code=BAD_REQUEST, detail="Error uploading resume to model.")
+
         return {"message": "Resume uploaded successfully."}
 
     except ValueError as e:
