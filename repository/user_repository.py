@@ -43,3 +43,12 @@ def get_resume_by_email(email: str):
         return resume_collections.find_one({"email": email})
     except Exception as e:
         raise ValueError(str(e))
+    
+def update_user_info(email: str, user_info: dict):
+    """
+    Update a user's info.
+    """
+    try:
+        collection.update_one({"email": email}, {"$set": user_info})
+    except Exception as e:
+        raise ValueError(str(e))

@@ -27,7 +27,7 @@ router = APIRouter(
 
 origins = ["*"]
 
-from repository.user_repository import create_user, get_resume_by_email, get_user, upload_user_resume
+from repository.user_repository import create_user, get_resume_by_email, get_user, upload_user_resume, update_user_info
 
 @router.post("/sign-up")
 def sign_up(user: UserSignUp):
@@ -132,3 +132,5 @@ def get_resume(email: str):
 
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+    
+

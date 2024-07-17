@@ -2,7 +2,7 @@
 """
 This module is dedicated for all the pydantic models the API will use.
 """
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -14,6 +14,9 @@ class UserSignUp(BaseModel):
     password: str
     first_name: str
     last_name: str
+    title: Optional[str] = None
+    description: Optional[str] = None
+    active: Optional[bool] = None
 
 class UserSignIn(BaseModel):
     """
@@ -29,7 +32,9 @@ class UserResponse(BaseModel):
     email: str
     first_name: str
     last_name: str
-
+    title: Optional[str] = None
+    description: Optional[str] = None
+    active: Optional[bool] = None
 class UserResume(BaseModel):
     """
     User resume model.
