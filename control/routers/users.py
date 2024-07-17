@@ -102,11 +102,16 @@ def upload_resume(token: str, resume: UserResume):
         upload_user_resume(email, resume)
 
         url = API_MATCHING_URL + f"/matching/candidate/{email}/"
+        data = {"user_model_data": resume.model_data}
+        print(url)
+        print(data)
 
         response = requests.post(
             url,
-            json= resume.model_data
+            json=data
         )
+        print(response.status_code)
+        print(response.json())
 
         if response.status_code != 200:
             raise HTTPException(status_code=BAD_REQUEST, detail="Error uploading resume to model.")
