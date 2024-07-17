@@ -102,7 +102,7 @@ def upload_resume(token: str, resume: UserResume):
         upload_user_resume(email, resume)
 
         url = API_MATCHING_URL + f"/matching/candidate/{email}/"
-        data = {"user_model_data": resume.model_data}
+        data = {"model_data": resume.model_data}
         print(url)
         print(data)
 
