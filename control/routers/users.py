@@ -105,7 +105,7 @@ def upload_resume(token: str, resume: UserResume):
 
         response = requests.post(
             url,
-            json={"model_data": resume.model_data}
+            json= resume.model_data
         )
 
         if response.status_code != 200:
