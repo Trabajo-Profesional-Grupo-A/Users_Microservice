@@ -121,7 +121,7 @@ def upload_resume(token: str, resume: UserResume):
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
-@router.get("/user/resume", response_model=UserResume)
+@router.get("/user/resume/{email}", response_model=UserResume)
 def get_resume(email: str):
     """
     Get a user's resume by token.
