@@ -2,6 +2,7 @@
 This module contains the API endpoints for the users service.
 """
 
+from typing import List
 from fastapi import (
     APIRouter,
     HTTPException,
@@ -27,7 +28,7 @@ router = APIRouter(
 
 origins = ["*"]
 
-from repository.user_repository import create_user, get_resume_by_email, get_user, upload_user_resume, update_user_info
+from repository.user_repository import create_user, get_resume_by_email, get_user, search_users_by_name, upload_user_resume, update_user_info
 
 @router.post("/sign-up")
 def sign_up(user: UserSignUp):
@@ -132,5 +133,19 @@ def get_resume(email: str):
 
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+    
+@router.get("/search", response_model=List[UserResponse])
+def search_users(name: str, limit: int = 5):
+    """
+    Search for users by their username.
+    """
+    try:
+        users = search_users_by_name(name, limit)
+        if not users:
+            raise HTTPException(status_code=USER_NOT_FOUND, detail="No users found.")
+        return [UserSignUp.parse_obj(user) for user in users]
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+
     
 
