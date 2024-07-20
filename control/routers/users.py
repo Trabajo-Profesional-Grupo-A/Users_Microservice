@@ -135,17 +135,16 @@ def get_resume(email: str):
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
 @router.get("/search", response_model=List[UserResponse])
-def search_users(name: str, limit: int = 5):
+def search_users(name: str, offset: int = 0, amount: int = 5):
     """
-    Search for users by their username.
+    Search for users by their first_name.
     """
     try:
-        users = search_users_by_name(name, limit)
+        users = search_users_by_name(name, offset, amount)
         if not users:
             raise HTTPException(status_code=USER_NOT_FOUND, detail="No users found.")
-        return [UserSignUp.parse_obj(user) for user in users]
+        return [UserResponse.parse_obj(user) for user in users]
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
-
     
 

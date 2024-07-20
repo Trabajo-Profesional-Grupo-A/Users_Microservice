@@ -53,27 +53,34 @@ def update_user_info(email: str, user_info: dict):
     except Exception as e:
         raise ValueError(str(e))
     
-def search_users_by_name(first_name: str, limit: int = 5):
+def search_users_by_name(first_name: str, offset: int = 0, amount: int = 5):
     """
     Search for users by their first_name. 
     First look for users whose first_name starts with the given prefix,
     then look for users whose first_name contains the given prefix if needed.
     """
     try:
-        users = list(collection.find({"first_name": {"$regex": f"^{first_name}", "$options": "i"}}).limit(limit))
-
-        if len(users) < limit:
-            additional_limit = limit - len(users)
-
-            additional_users = list(collection.find(
-                {"first_name": {"$regex": first_name, "$options": "i"}}
-            ).limit(additional_limit))
-            
-            additional_users = [user for user in additional_users if user not in users]
-            
-            users.extend(additional_users)
+        users_starting_with = list(
+            collection.find({"first_name": {"$regex": f"^{first_name}", "$options": "i"}})
+                      .skip(offset)
+                      .limit(amount)
+        )
         
-        return users
+        additional_amount = amount - len(users_starting_with)
+
+        if additional_amount > 0:
+            additional_users = list(
+                collection.find({"first_name": {"$regex": f".*{first_name}.*", "$options": "i"}})
+                          .skip(offset)
+                          .limit(additional_amount)
+            )
+            
+            additional_users = [user for user in additional_users if user not in users_starting_with]
+            
+            users_starting_with.extend(additional_users)
+
+        return users_starting_with
     except Exception as e:
         raise ValueError(f"An error occurred: {e}")
+
 
