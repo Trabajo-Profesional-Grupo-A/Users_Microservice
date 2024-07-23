@@ -40,7 +40,13 @@ def get_resume_by_email(email: str):
     Get a user's resume by email.
     """
     try:
-        return resume_collections.find_one({"email": email})
+        resume = resume_collections.find_one({"email": email})
+        user_data = collection.find_one({"email": email})
+
+        resume["address"]= user_data["address"]
+        resume["age"] = user_data["age"]
+
+        return resume
     except Exception as e:
         raise ValueError(str(e))
     

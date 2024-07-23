@@ -18,7 +18,7 @@ from control.codes import (
 
 API_MATCHING_URL = "http://34.42.161.58:8000"
 
-from control.models.models import UserResume, UserSignUp, UserSignIn, UserResponse
+from control.models.models import UploadResumeRequest, UserResume, UserSignUp, UserSignIn, UserResponse
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
 
 router = APIRouter(
@@ -90,7 +90,7 @@ def get_user_by_email(email: str):
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
 
 @router.post("/user/upload_resume")
-def upload_resume(token: str, resume: UserResume):
+def upload_resume(token: str, resume: UploadResumeRequest):
     """
     Upload a resume for a user.
     """

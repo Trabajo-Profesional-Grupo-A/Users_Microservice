@@ -51,3 +51,13 @@ class UserResume(BaseModel):
     model_data: str
     address: str
     age: int
+
+class UploadResumeRequest(BaseModel):
+    """
+    Upload resume request model.
+    """
+    education: str
+    experience: str
+    job_titles: List[str]
+    skills: List[str]
+    model_data: str
