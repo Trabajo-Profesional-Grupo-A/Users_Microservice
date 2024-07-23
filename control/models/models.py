@@ -17,6 +17,8 @@ class UserSignUp(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     active: Optional[bool] = None
+    address: str
+    age: int
 
 class UserSignIn(BaseModel):
     """
@@ -35,6 +37,9 @@ class UserResponse(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     active: Optional[bool] = None
+    address: str
+    age: int
+    
 class UserResume(BaseModel):
     """
     User resume model.
@@ -44,3 +49,5 @@ class UserResume(BaseModel):
     job_titles: List[str]
     skills: List[str]
     model_data: str
+    address: str
+    age: int
