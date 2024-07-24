@@ -20,6 +20,7 @@ API_MATCHING_URL = "http://34.42.161.58:8000"
 
 from control.models.models import UploadResumeRequest, UserResume, UserSignUp, UserSignIn, UserResponse
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
+from typing import List
 
 router = APIRouter(
     tags=["users"],
@@ -28,7 +29,7 @@ router = APIRouter(
 
 origins = ["*"]
 
-from repository.user_repository import create_user, get_resume_by_email, get_user, search_users_by_name, upload_user_resume, update_user_info
+from repository.user_repository import create_user, get_resume_by_email, get_user, search_users_by_name, upload_user_resume, get_users_by_emails
 
 @router.post("/sign-up")
 def sign_up(user: UserSignUp):
@@ -146,5 +147,18 @@ def search_users(name: str, offset: int = 0, amount: int = 5):
         return [UserResponse.parse_obj(user) for user in users]
     except ValueError as e:
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+    
+@router.post("/by_emails", response_model=List[UserResponse])
+def get_users_by_emails_api(emails: List[str]):
+    """
+    Get a list of users by their emails.
+    """
+    try:
+        users = get_users_by_emails(emails)
+        if not users:
+            raise HTTPException(status_code=404, detail="No users found for the provided emails.")
+        return [UserResponse.parse_obj(user) for user in users]
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     
 
