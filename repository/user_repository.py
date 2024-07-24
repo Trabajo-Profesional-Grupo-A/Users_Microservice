@@ -3,6 +3,7 @@ from pymongo.server_api import ServerApi
 from pymongo import errors
 from control.models.models import UserResume, UserSignUp
 from repository.setup_mongodb import db, collection, resume_collections
+from typing import List
 
 def create_user(user: UserSignUp): 
     """
@@ -44,7 +45,13 @@ def get_resume_by_email(email: str):
     Get a user's resume by email.
     """
     try:
-        return resume_collections.find_one({"email": email})
+        resume = resume_collections.find_one({"email": email})
+        user_data = collection.find_one({"email": email})
+
+        resume["address"]= user_data["address"]
+        resume["age"] = user_data["age"]
+
+        return resume
     except Exception as e:
         raise ValueError(str(e))
     
@@ -86,5 +93,16 @@ def search_users_by_name(first_name: str, offset: int = 0, amount: int = 5):
         return users_starting_with
     except Exception as e:
         raise ValueError(f"An error occurred: {e}")
+    
+def get_users_by_emails(emails: List[str]):
+    """
+    Get users by a list of emails.
+    """
+    try:
+        users = list(collection.find({"email": {"$in": emails}}))
+        return users
+    except Exception as e:
+        raise ValueError(f"An error occurred: {e}")
+
 
 
