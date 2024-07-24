@@ -26,12 +26,16 @@ def get_user(email: str):
     
 def upload_user_resume(email:str, resume: UserResume):
     """
-    Update a user's resume.
+    Update a user's resume, or create a new resume if it doesn't exist.
     """
     try:
         resume_dict = dict(resume)
         resume_dict["email"] = email
-        resume_collections.insert_one(resume_dict)
+        resume_collections.update_one(
+            {"email": email},
+            {"$set": resume_dict}, 
+            upsert=True  
+        )
     except Exception as e:
         raise ValueError(str(e))
     
