@@ -154,6 +154,7 @@ def get_users_by_emails_api(emails: List[str]):
     Get a list of users by their emails.
     """
     try:
+        
         users = get_users_by_emails(emails)
         if not users:
             raise HTTPException(status_code=404, detail="No users found for the provided emails.")
