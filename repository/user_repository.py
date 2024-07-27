@@ -99,7 +99,11 @@ def get_users_by_emails(emails: List[str]):
     Get users by a list of emails.
     """
     try:
-        users = list(collection.find({"email": {"$in": emails}}))
+        users = []
+        for email in emails:
+            user = collection.find_one({"email": email})
+            if user:
+                users.append(user)
         return users
     except Exception as e:
         raise ValueError(f"An error occurred: {e}")
