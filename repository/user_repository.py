@@ -1,7 +1,7 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from pymongo import errors
-from control.models.models import UserResume, UserSignUp
+from control.models.models import UserResume, UserSignUp, UserUpdate
 from repository.setup_mongodb import db, collection, resume_collections
 from typing import List
 
@@ -55,12 +55,14 @@ def get_resume_by_email(email: str):
     except Exception as e:
         raise ValueError(str(e))
     
-def update_user_info(email: str, user_info: dict):
+def update_user_info(email: str, user_info: UserUpdate):
     """
     Update a user's info.
     """
+
     try:
-        collection.update_one({"email": email}, {"$set": user_info})
+        update_data = user_info.dict(exclude_unset=True)
+        collection.update_one({"email": email}, {"$set": update_data})
     except Exception as e:
         raise ValueError(str(e))
     

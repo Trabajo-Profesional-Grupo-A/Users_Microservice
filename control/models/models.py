@@ -61,3 +61,12 @@ class UploadResumeRequest(BaseModel):
     job_titles: List[str]
     skills: List[str]
     model_data: str
+
+class UserUpdate(BaseModel):
+    first_name: str
+    last_name: str
+    title: Optional[str] = None
+    description: Optional[str] = None
+    active: Optional[bool] = None
+    address: str
+    age: int

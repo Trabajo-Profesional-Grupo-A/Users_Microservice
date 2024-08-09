@@ -18,7 +18,7 @@ from control.codes import (
 
 API_MATCHING_URL = "http://34.42.161.58:8000"
 
-from control.models.models import UploadResumeRequest, UserResume, UserSignUp, UserSignIn, UserResponse
+from control.models.models import UploadResumeRequest, UserResume, UserSignUp, UserSignIn, UserResponse, UserUpdate
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
 from typing import List
 
@@ -29,7 +29,7 @@ router = APIRouter(
 
 origins = ["*"]
 
-from repository.user_repository import create_user, get_resume_by_email, get_user, search_users_by_name, upload_user_resume, get_users_by_emails
+from repository.user_repository import create_user, get_resume_by_email, get_user, search_users_by_name, update_user_info, upload_user_resume, get_users_by_emails
 
 @router.post("/sign-up")
 def sign_up(user: UserSignUp):
@@ -161,5 +161,25 @@ def get_users_by_emails_api(emails: List[str]):
         return [UserResponse.parse_obj(user) for user in users]
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+@router.put("/user/update")
+def update_user(token: str, user_update: UserUpdate):
+    """
+    Update an existing user's information.
+    """
+    try:
+        email = decode_token(token)["email"]
+        user = get_user(email)
+
+        if not user:
+            raise HTTPException(status_code=USER_NOT_FOUND, detail="User not found.")
+        
+        # Aquí se haría la actualización en la base de datos
+        update_user_info(email, user_update)
+
+        return {"message": "User update successfully."}
+    
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
 
