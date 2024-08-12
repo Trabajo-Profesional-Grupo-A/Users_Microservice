@@ -183,3 +183,31 @@ def update_user(token: str, user_update: UserUpdate):
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
 
+@router.post("user/activate/")
+def activate_user(token: str):
+    """
+    Activate a user.
+    """
+    try:
+        email = decode_token(token)["email"]
+        user = get_user(email)
+        if not user:
+            raise HTTPException(status_code=USER_NOT_FOUND, detail="User not found.")
+        
+        model_data = get_resume_by_email(email)["model_data"]
+
+        url = API_MATCHING_URL + f"/matching/candidate/{email}/"
+        data = {"model_data": model_data}
+
+        response = requests.post(
+            url,
+            json=data
+        )
+        if response.status_code != 200:
+            raise HTTPException(status_code=BAD_REQUEST, detail="Error activating user.")
+        
+        return {"message": "User activated successfully."}
+    except ValueError as e:
+        raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
+    
+
