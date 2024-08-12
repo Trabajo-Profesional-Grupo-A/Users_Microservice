@@ -183,7 +183,7 @@ def update_user(token: str, user_update: UserUpdate):
         raise HTTPException(status_code=BAD_REQUEST, detail=str(e))
     
 
-@router.post("user/activate/")
+@router.post("/user/activate/")
 def activate_user(token: str):
     """
     Activate a user.
