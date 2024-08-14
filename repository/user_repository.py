@@ -50,6 +50,7 @@ def get_resume_by_email(email: str):
 
         resume["address"]= user_data["address"]
         resume["age"] = user_data["age"]
+        resume["job_preferences"] = user_data["job_preferences"]
 
         return resume
     except Exception as e:

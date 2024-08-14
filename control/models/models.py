@@ -19,6 +19,7 @@ class UserSignUp(BaseModel):
     active: Optional[bool] = None
     address: str
     age: int
+    job_preferences: Optional[List[str]] = None
 
 class UserSignIn(BaseModel):
     """
@@ -39,6 +40,7 @@ class UserResponse(BaseModel):
     active: Optional[bool] = None
     address: str
     age: int
+    job_preferences: Optional[List[str]] = None
     
 class UserResume(BaseModel):
     """
@@ -51,6 +53,8 @@ class UserResume(BaseModel):
     model_data: str
     address: str
     age: int
+    job_preferences: Optional[List[str]] = None
+
 
 class UploadResumeRequest(BaseModel):
     """
@@ -70,3 +74,4 @@ class UserUpdate(BaseModel):
     active: Optional[bool] = None
     address: str
     age: int
+    job_preferences: Optional[List[str]] = None
