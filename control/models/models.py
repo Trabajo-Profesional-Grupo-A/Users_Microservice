@@ -54,6 +54,7 @@ class UserResume(BaseModel):
     address: str
     age: int
     job_preferences: Optional[List[str]] = None
+    years_of_experience: int
 
 
 class UploadResumeRequest(BaseModel):
@@ -65,6 +66,7 @@ class UploadResumeRequest(BaseModel):
     job_titles: List[str]
     skills: List[str]
     model_data: str
+    years_of_experience: int
 
 class UserUpdate(BaseModel):
     first_name: str
