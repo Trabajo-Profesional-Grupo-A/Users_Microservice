@@ -23,7 +23,7 @@ from control.codes import (
     CONFLICT,
 )
 
-API_MATCHING_URL = "http://34.42.161.58:8000"
+API_MATCHING_URL = "http://34.42.125.53:8000"
 
 from control.models.models import UploadResumeRequest, UserResume, UserSignUp, UserSignIn, UserResponse, UserUpdate
 from auth.auth_handler import hash_password, check_password, generate_token, decode_token
